@@ -25,7 +25,10 @@ class OrderController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
+        $address_id = uniqid();
+
         $address = [
+            'id' => $address_id,
             'contact_person_name' => $request->contact_person_name ? $request->contact_person_name : $request->user()->f_name . ' ' . $request->user()->f_name,
             'contact_person_number' => $request->contact_person_number ? $request->contact_person_number : $request->user()->phone,
             'address' => $request->address,
@@ -44,7 +47,27 @@ class OrderController extends Controller
         $order->otp = rand(1000, 9999); //checked
         $order->pending = now(); //checked
         $order->created_at = now(); //checked
-        $order->updated_at = now(); //checked
+        $order->updated_at = now();
+        $order->order_type = $request['order_type']; //checked
+
+        $order->payment_status = $request['payment_method'] == 'wallet' ? 'paid' : 'unpaid';
+        $order->order_status = $request['payment_method'] == 'digital_payment' ? 'failed' : (
+            $request->payment_method == 'wallet' ? 'comfirmed' : 'pending'
+        );
+        $order->payment_method = $request->payment_method;
+
+        $scheduled_at = $request->scheduled_at ? \Carbon\Carbon::parse($request->scheduled_at) : now();
+        if ($request->scheduled_at && $scheduled_at < now()) {
+            return response()->json([
+                'errors' => [
+                    ['code' => 'order_time', 'message' => trans('
+                        messages.you_can_not_schedule_a_order_in_past
+                    ')]
+                ]
+            ], 406);
+        }
+        $order->scheduled_at = $scheduled_at;
+        $order->scheduled = $request->scheduled_at ? 1 : 0;
 
         foreach ($request['cart'] as $c) {
 
@@ -79,6 +102,11 @@ class OrderController extends Controller
             $save_order = $order->id;
             $total_price = $product_price;
             $order->order_amount = $total_price;
+            $order->address = $address;
+
+            print_r($order);
+            die();
+
             $order->save();
 
             foreach ($order_details as $key => $item) {
@@ -89,6 +117,8 @@ class OrderController extends Controller
             insert method is part of query builder
             */
             OrderDetail::insert($order_details);
+
+            // Helpers::send_order_notification($order, $request->user()->cm_firebase_token);
 
             return response()->json([
                 'message' => trans('messages.order_placed_successfully'),

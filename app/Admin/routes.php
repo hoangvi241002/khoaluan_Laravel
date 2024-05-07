@@ -15,4 +15,6 @@ Route::group([
     $router->resource('medical-devices', MedicalDeviceController::class);
     $router->resource('medical-device-types', MedicalDeviceTypeController::class);
     $router->resource('users', UserController::class);
+    $router->resource('orders', OrderController::class);
+    $router->resource('order-details', OrderDetailController::class);
 });

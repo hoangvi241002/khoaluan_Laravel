@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
@@ -8,9 +9,10 @@ use App\Models\CustomerAddress;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
-class CustomerController extends Controller{
-    
-     public function address_list(Request $request)
+class CustomerController extends Controller
+{
+
+    public function address_list(Request $request)
     {
         return response()->json(CustomerAddress::where('user_id', $request->user()->id)->latest()->get(), 200);
     }
@@ -18,19 +20,19 @@ class CustomerController extends Controller{
     public function info(Request $request)
     {
         $data = $request->user();
-        
-        $data['order_count'] =0;//(integer)$request->user()->orders->count();
-        $data['member_since_days'] =(integer)$request->user()->created_at->diffInDays();
+
+        // $data['order_count'] =0;//(integer)$request->user()->orders->count();
+        // $data['member_since_days'] =(integer)$request->user()->created_at->diffInDays();
         //unset($data['orders']);
         return response()->json($data, 200);
     }
-        public function add_new_address(Request $request)
+    public function add_new_address(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'contact_person_name' => 'required',
             'contact_person_number' => 'required',
             'address' => 'required',
-          
+
         ]);
 
         if ($validator->fails()) {
@@ -51,7 +53,7 @@ class CustomerController extends Controller{
         DB::table('customer_addresses')->insert($address);
         return response()->json(['message' => trans('messages.successfully_added')], 200);
     }
-        public function update_address(Request $request,$id)
+    public function update_address(Request $request, $id)
     {
         $validator = Validator::make($request->all(), [
             'contact_person_name' => 'required',
@@ -88,6 +90,6 @@ class CustomerController extends Controller{
             'updated_at' => now()
         ];
         DB::table('customer_addresses')->where('user_id', $request->user()->id)->update($address);
-        return response()->json(['message' => trans('messages.updated_successfully'),'zone_id'=>$zone->id], 200);
+        return response()->json(['message' => trans('messages.updated_successfully'), 'zone_id' => $zone->id], 200);
     }
 }

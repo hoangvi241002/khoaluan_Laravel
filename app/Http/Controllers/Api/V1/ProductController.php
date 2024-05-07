@@ -12,7 +12,7 @@ class ProductController extends Controller
     public function get_popular_products(Request $request)
     {
 
-        $list = MedicalDevice::where('type_id', 2)->take(10)->get();
+        $list = MedicalDevice::where('type_id', 2)->take(10)->orderBy('created_at', 'DESC')->get();
 
         foreach ($list as $item) {
             $item['description'] = strip_tags($item['description']);
@@ -32,7 +32,7 @@ class ProductController extends Controller
     }
     public function get_recommended_products(Request $request)
     {
-        $list = MedicalDevice::where('type_id', 3)->take(10)->get();
+        $list = MedicalDevice::where('type_id', 3)->take(10)->orderBy('created_at', 'DESC')->get();
 
         foreach ($list as $item) {
             $item['description'] = strip_tags($item['description']);

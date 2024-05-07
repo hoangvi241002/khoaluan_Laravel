@@ -42,10 +42,10 @@ Route::group(['namespace' => 'Api\V1'], function () {
             Route::delete('delete', 'CustomerController@delete_address');
         });
         Route::group(['prefix' => 'order'], function () {
+            Route::post('place', 'OrderController@place_order');
             Route::get('list', 'OrderController@get_order_list');
             Route::get('running-orders', 'OrderController@get_running_orders');
             Route::get('details', 'OrderController@get_order_details');
-            Route::post('place', 'OrderController@place_order');
             Route::put('cancel', 'OrderController@cancel_order');
             Route::put('refund-request', 'OrderController@refund_request');
             Route::get('track', 'OrderController@track_order');

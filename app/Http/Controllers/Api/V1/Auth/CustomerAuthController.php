@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers\Api\V1\Auth;
+
 use App\CentralLogics\Helpers;
 
 use App\Http\Controllers\Controller;
@@ -13,10 +14,10 @@ use Illuminate\Support\Facades\Validator;
 
 class CustomerAuthController extends Controller
 {
-    
-     public function login(Request $request)
+
+    public function login(Request $request)
     {
-          $validator = Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'phone' => 'required',
             'password' => 'required|min:6'
         ]);
@@ -28,20 +29,19 @@ class CustomerAuthController extends Controller
             'phone' => $request->phone,
             'password' => $request->password
         ];
-        
+
         if (auth()->attempt($data)) {
             //auth()->user() is coming from laravel auth:api middleware
-            $token = auth()->user()->createToken('RestaurantCustomerAuth')->accessToken;
-            if(!auth()->user()->status)
-            {
+            $token = auth()->user()->createToken('MedicalDeviceCustomerAuth')->accessToken;
+            if (!auth()->user()->status) {
                 $errors = [];
                 array_push($errors, ['code' => 'auth-003', 'message' => trans('messages.your_account_is_blocked')]);
                 return response()->json([
                     'errors' => $errors
                 ], 403);
             }
-          
-            return response()->json(['token' => $token, 'is_phone_verified'=>auth()->user()->is_phone_verified], 200);
+
+            return response()->json(['token' => $token, 'is_phone_verified' => auth()->user()->is_phone_verified], 200);
         } else {
             $errors = [];
             array_push($errors, ['code' => 'auth-001', 'message' => 'Unauthorized.']);
@@ -50,8 +50,8 @@ class CustomerAuthController extends Controller
             ], 401);
         }
     }
-    
-        public function register(Request $request)
+
+    public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
             'f_name' => 'required',
@@ -75,9 +75,9 @@ class CustomerAuthController extends Controller
             'password' => bcrypt($request->password),
         ]);
 
-        $token = $user->createToken('RestaurantCustomerAuth')->accessToken;
+        $token = $user->createToken('MedicalDeviceCustomerAuth')->accessToken;
 
-       
-        return response()->json(['token' => $token,'is_phone_verified' => 0, 'phone_verify_end_url'=>"api/v1/auth/verify-phone" ], 200);
+
+        return response()->json(['token' => $token, 'is_phone_verified' => 0, 'phone_verify_end_url' => "api/v1/auth/verify-phone"], 200);
     }
 }

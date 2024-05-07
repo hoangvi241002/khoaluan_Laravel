@@ -27,13 +27,14 @@ class UserController extends AdminController
         $grid = new Grid(new User());
 
         $grid->column('id', __('Id'));
-        $grid->column('f_name', __('F name'));
+        $grid->column('f_name', __('Name'));
         $grid->column('phone', __('Phone'));
         $grid->column('email', __('Email'));
         $grid->column('status', __('Status'));
-        $grid->column('email_verified_at', __('Email verified at'));
-        $grid->column('password', __('Password'));
-        $grid->column('remember_token', __('Remember token'));
+        // $grid->column('email_verified_at', __('Email verified at'));
+        $grid->email_verified_at("Verified")->display(function ($verified) {
+            return $verified ? 'Yes' : 'No';
+        });
         $grid->column('created_at', __('Created at'));
         $grid->column('updated_at', __('Updated at'));
         $grid->column('order_count', __('Order count'));
