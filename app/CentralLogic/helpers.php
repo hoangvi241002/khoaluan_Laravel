@@ -32,8 +32,4 @@ class Helpers
 
         return $config;
     }
-    public static function currency_code()
-    {
-        return  BusinessSetting::where(['key' => 'currency'])->first()->value;
-    }
 }

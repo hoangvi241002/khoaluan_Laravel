@@ -46,7 +46,7 @@ class OrderController extends AdminController
         $grid->column('updated_at', __('Updated at'));
         $grid->column('delivery_charge', __('Delivery charge'));
         $grid->column('delivery_address', __('Delivery address'));
-        $grid->column('otp', __('Otp'));
+        // $grid->column('otp', __('Otp'));
         $grid->column('pending', __('Pending'));
         $grid->column('picked_up', __('Picked up'));
         $grid->column('delivered', __('Delivered'));
@@ -85,7 +85,7 @@ class OrderController extends AdminController
         $show->field('updated_at', __('Updated at'));
         $show->field('delivery_charge', __('Delivery charge'));
         $show->field('delivery_address', __('Delivery address'));
-        $show->field('otp', __('Otp'));
+        // $show->field('otp', __('Otp'));
         $show->field('pending', __('Pending'));
         $show->field('picked_up', __('Picked up'));
         $show->field('delivered', __('Delivered'));
@@ -120,7 +120,7 @@ class OrderController extends AdminController
         $form->textarea('order_note', __('Order note'));
         $form->decimal('delivery_charge', __('Delivery charge'));
         $form->textarea('delivery_address', __('Delivery address'));
-        $form->text('otp', __('Otp'));
+        // $form->text('otp', __('Otp'));
         $form->datetime('pending', __('Pending'))->default(date('Y-m-d H:i:s'));
         $form->datetime('picked_up', __('Picked up'))->default(date('Y-m-d H:i:s'));
         $form->datetime('delivered', __('Delivered'))->default(date('Y-m-d H:i:s'));

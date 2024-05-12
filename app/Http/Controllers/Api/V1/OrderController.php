@@ -39,21 +39,23 @@ class OrderController extends Controller
         $product_price = 0;
 
         $order = new Order();
+
         $order->id = 100000 + Order::all()->count() + 1; //checked
         $order->user_id = $request->user()->id; //checked 
         $order->order_amount = $request['order_amount']; //checked 
         $order->order_note = $request['order_note']; //checked
         $order->delivery_address = json_encode($address); //checked
-        $order->otp = rand(1000, 9999); //checked
+        // $order->otp = rand(1000, 9999); //checked
         $order->pending = now(); //checked
         $order->created_at = now(); //checked
         $order->updated_at = now();
         $order->order_type = $request['order_type']; //checked
 
-        $order->payment_status = $request['payment_method'] == 'wallet' ? 'paid' : 'unpaid';
+        $order->payment_status = $request['payment_method'] == 'cash_on_delivery' ? 'paid' : 'unpaid';
         $order->order_status = $request['payment_method'] == 'digital_payment' ? 'failed' : (
-            $request->payment_method == 'wallet' ? 'comfirmed' : 'pending'
+            $request->payment_method == 'cash_on_delivery' ? 'confirmed' : 'pending'
         );
+
         $order->payment_method = $request->payment_method;
 
         $scheduled_at = $request->scheduled_at ? \Carbon\Carbon::parse($request->scheduled_at) : now();
@@ -102,10 +104,9 @@ class OrderController extends Controller
             $save_order = $order->id;
             $total_price = $product_price;
             $order->order_amount = $total_price;
-            $order->address = $address;
 
-            print_r($order);
-            die();
+            // print_r($order); 
+            // die();
 
             $order->save();
 

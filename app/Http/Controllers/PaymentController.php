@@ -15,12 +15,18 @@ class PaymentController extends Controller
             Order::where(['id' => $request->order_id])->update(['callback' => $request['callback']]);
         }
 
-        session()->put('customer_id', $request['client_id']);
+        session()->put('customer_id', $request['customer_id']);
         session()->put('order_id', $request->order_id);
 
         $customer = User::find($request['customer_id']);
+        session()->put('f_name', $customer['f_name']);
 
         $order = Order::where(['id' => $request->order_id, 'user_id' => $request['customer_id']])->first();
+
+
+        // print_r($order);
+        // die();
+
 
         if (isset($customer) && isset($order)) {
             $data = [

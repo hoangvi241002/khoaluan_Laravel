@@ -7,7 +7,6 @@ use Carbon\Carbon;
 
 class Order extends Model
 {
-
     protected $casts = [
         'order_amount' => 'float',
         'total_tax_amount' => 'float',
@@ -29,7 +28,6 @@ class Order extends Model
     {
         return $this->hasMany(OrderDetail::class);
     }
-
     public function scopeNotpos($query)
     {
         return $query->where('order_type', '<>', 'pos');
@@ -37,14 +35,5 @@ class Order extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
-    }
-
-    public function scopeOrderScheduledIn($query, $interval)
-    {
-        return $query->where(function ($query) use ($interval) {
-            $query->whereRaw('created_at <> scheduled_at')->where(function ($q) use ($interval) {
-                $q->whereBetween('scheduled_at', [Carbon::now()->toDateTimeString(), Carbon::now()->addMinutes($interval)->toDateTimeString()]);
-            })->orWhere('scheduled_at', '<', Carbon::now()->toDateTimeString());
-        })->orWhereRaw('created_at = scheduled_at');
     }
 }

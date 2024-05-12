@@ -51,6 +51,41 @@ class ProductController extends Controller
         return response()->json($data, 200);
     }
 
+    public function search_products(Request $request)
+    {
+        // Lấy từ khóa tìm kiếm từ request
+        $keyword = $request->input('keyword');
+
+        // Truy vấn các sản phẩm từ cơ sở dữ liệu
+        $result = MedicalDevice::where('name', 'like', '%' . $keyword . '%')
+            ->orWhere('description', 'like', '%' . $keyword . '%')
+            ->orderBy('created_at', 'DESC')
+            ->take(3)
+            ->get();
+
+        foreach ($result as $item) {
+            $item['description'] = strip_tags($item['description']);
+            $item['description'] = preg_replace("/&#?[a-z0-9]+;/i", " ", $item['description']);
+            unset($item['selected_people']);
+            unset($item['people']);
+        }
+
+        // Trả về kết quả dưới dạng JSON
+        $data = [
+            'total_size' => $result->count(),
+            'keyword' => $keyword,
+            'offset' => 0,
+            'products' => $result
+        ];
+
+        return response()->json($data, 200);
+    }
+
+
+
+
+
+
 
     public function test_get_recommended_products(Request $request)
     {

@@ -24,8 +24,8 @@ use PayPal\Api\Transaction;
 use PayPal\Auth\OAuthTokenCredential;
 use PayPal\Common\PayPalModel;
 use PayPal\Rest\ApiContext;
-// require __DIR__  . '/PayPal-PHP-SDK/autoload.php';
-// require __DIR__  . '/PayPal-PHP-SDK/autoload.php';
+//require __DIR__  . '/PayPal-PHP-SDK/autoload.php';
+//require __DIR__  . '/PayPal-PHP-SDK/autoload.php';
 
 class PaypalPaymentController extends Controller
 {
@@ -36,7 +36,7 @@ class PaypalPaymentController extends Controller
         $this->_api_context =  new \PayPal\Rest\ApiContext(
             new OAuthTokenCredential(
                 $paypal_conf['client_id'],
-                $paypal_conf['client_secret']
+                $paypal_conf['secret']
             )
         );
         $this->_api_context->setConfig($paypal_conf['settings']);
@@ -55,8 +55,7 @@ class PaypalPaymentController extends Controller
         $items_array = [];
         $item = new Item();
         $number = sprintf("%0.2f", $order['order_amount']);
-
-        $item->setName(session('f_name'))
+        $item->setName($order->customer['f_name'])
             ->setCurrency(Helpers::currency_code())
             ->setQuantity(1)
             ->setPrice($number);
