@@ -11,8 +11,8 @@ class OrderDetail extends Model
 
     protected $casts = [
         'price' => 'float',
-        'discount_on_medicaldevice' => 'float',
-        'total_add_on_price' => 'float',
+        // 'discount_on_medicaldevice' => 'float',
+        // 'total_add_on_price' => 'float',
         'tax_amount' => 'float',
         'medical_device_id' => 'integer',
         'order_id' => 'integer',
@@ -28,6 +28,6 @@ class OrderDetail extends Model
 
     public function medicaldevice()
     {
-        return $this->belongsTo(medicaldevice::class, 'medical_device_id');
+        return $this->belongsTo(MedicalDevice::class, 'medical_device_id');
     }
 }

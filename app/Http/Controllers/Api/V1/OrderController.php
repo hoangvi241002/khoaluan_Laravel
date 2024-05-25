@@ -25,6 +25,8 @@ class OrderController extends Controller
             return response()->json(['errors' => Helpers::error_processor($validator)], 403);
         }
 
+
+
         $address_id = uniqid();
 
         $address = [
@@ -105,14 +107,15 @@ class OrderController extends Controller
             $total_price = $product_price;
             $order->order_amount = $total_price;
 
-            // print_r($order); 
-            // die();
-
             $order->save();
 
             foreach ($order_details as $key => $item) {
                 $order_details[$key]['order_id'] = $order->id;
             }
+
+            // print_r($order_details[0]);
+            // die();
+
             /*
             insert method takes array of arrays and insert each array in the database as a record.
             insert method is part of query builder
@@ -130,6 +133,7 @@ class OrderController extends Controller
         } catch (\Exception $e) {
             return response()->json([$e], 403);
         }
+
 
         return response()->json([
             'errors' => [
